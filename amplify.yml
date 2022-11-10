@@ -1,0 +1,20 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci --prefix app
+    build:
+      commands:
+        - npm run --prefix app build
+        - npm ci --prod --prefix app
+        - mkdir -p .next/standalone
+        - cp -r app/static app/build/* app/package.json app/node_modules .next/standalone 
+        - mv .next/standalone/index.js .next/standalone/server.js
+  artifacts:
+    baseDirectory: build
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - app/build/**/*
